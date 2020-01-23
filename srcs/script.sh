@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Installation de tout ce qui est necessaire
+# Installations
 apt-get -y update
 apt-get -y upgrade
 apt-get -y install wget
@@ -19,23 +19,16 @@ cp /tmp/mkcert /usr/local/bin/
 mkcert -install
 mkcert localhost
 mv localhost-key.pem localhost.pem /var/www/monsite
-
-
+#Config NGINX
 mv /perso/monsite /etc/nginx/sites-available/
 ln -s /etc/nginx/sites-available/monsite /etc/nginx/sites-enabled/
 rm /etc/nginx/sites-available/default
 rm /etc/nginx/sites-enabled/default
 service nginx start
-#mv /perso/default /etc/nginx/sites-enabled/
 service nginx restart
 service php7.3-fpm start
 service mysql start
-
 ## MYSQL
-# Creation root
-#mysql -u root -p -e "ALTER USER root@localhost IDENTIFIED VIA mysql_native_password"
-#mysql -u root -p -e "SET PASSWORD = PASSWORD('root')"
-#mysql -u root -p root -e "flush privileges"
 #Creation d'une data-base pour lancer wordpress
 echo "CREATE DATABASE wordpress" | mysql -u root
 echo "CREATE USER 'User' IDENTIFIED BY 'password'" | mysql -u root
@@ -52,8 +45,6 @@ mv /perso/wp-config.php /var/www/monsite/wordpress
 wget https://files.phpmyadmin.net/phpMyAdmin/4.9.0.1/phpMyAdmin-4.9.0.1-all-languages.tar.gz -P /tmp
 tar -zxvf /tmp/phpMyAdmin-4.9.0.1-all-languages.tar.gz -C /var/www/monsite/
 mv /var/www/monsite/phpMyAdmin-4.9.0.1-all-languages /var/www/monsite/phpmyadmin
-#mv /perso/config.inc.php /var/www/monsite/phpmyadmin/
-#chmod 660 /var/www/monsite/phpmyadmin/config.inc.php
 service nginx restart
 service php7.3-fpm restart
 service mysql restart
